@@ -59,6 +59,7 @@ OPENAI_API_KEY=$KEY OPENAI_BASE_URL=$URL OPENAI_MODEL=$MODEL \
 | `nrc_scorer.py` | NRC word-list emotion scorer (offline) |
 | `build_dashboard.py` | Generates the self-contained `dashboard.html` |
 | `verify_dashboard.py` | Cross-checks the embedded/rendered numbers against the saved ground truth |
+| `recompute_run.py` | Recompute every published number from the raw output — the self-check |
 | `reviews_3class.jsonl` | One balanced run's raw output (129 labeled of 150) |
 | `dashboard.html` | The final dashboard (works offline, themable via CSS tokens) |
 
@@ -99,11 +100,32 @@ Emotions (LLM vs NRC word list, over 105 reviews where both produced one):
 
 ---
 
+## Re-check these numbers yourself
+
+Every figure above is derived from the saved raw output `reviews_3class.jsonl` (label,
+rating, text, emotion) plus the fixation that balanced sampling is deterministic (seed 42).
+You can re-derive all of it without the model or the dashboard:
+
+```bash
+# Reproduce every number in this README from the raw output
+python recompute_run.py reviews_3class.jsonl
+
+# Confirm the dashboard's embedded data + filters equal that same saved output
+python verify_dashboard.py dashboard.html reviews_3class.jsonl
+```
+
+`recompute_run.py` recomputes the agreement, per-class recalls, the 3×3 confusion matrix,
+the star distribution, and the LLM-vs-NRC emotion comparison, and prints them — compare its
+output line-by-line with the tables above. `verify_dashboard.py` must print `ALL CHECKS PASS`.
+
+---
+
 ## Findings
 
 ### 1. Why did the lopsided run look very accurate, and what did balanced sampling change?
 
-The full file is overwhelmingly positive: ~88% of reviews are 4–5★ and only ~2% are 3★.
+The full 152,410-review file is overwhelmingly positive: **134,940 (88.5%) are 4–5★**,
+**14,199 (9.3%) are 1–2★**, and only **3,271 (2.1%) are 3★**.
 An un- (or randomly-) sampled, mostly-positive set, judged with a **binary** positive/negative
 rule, appeared to match ratings ~97% of the time. That number mostly reflected the **class
 prior** — there were almost no 3-star reviews to test a middle class.
