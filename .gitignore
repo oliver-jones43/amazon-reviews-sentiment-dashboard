@@ -1,0 +1,8 @@
+# Raw data is 12 MB gzip and re-downloadable from the source cited in README.md
+Gift_Cards.jsonl.gz
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.venv-classify/

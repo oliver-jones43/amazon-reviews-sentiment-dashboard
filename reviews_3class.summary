@@ -1,0 +1,15 @@
+model=DeepSeek-V4-Flash-0731
+total=150
+ok=129
+failed=21
+predicted_positive=52 predicted_negative=73
+eval_n=129
+eval_accuracy=0.7442
+eval_class_positive=48/50
+eval_class_neutral=3/34
+eval_class_negative=45/45
+confusion(rows=gold, cols=pred):
+      positive neutralnegative
+positive      48       1       1
+neutral       4       3      27
+negative       0       0      45
